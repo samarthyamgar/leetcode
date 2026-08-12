@@ -1,0 +1,28 @@
+name: LeetCode Sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Runs automatically every day at midnight UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Step A: Check out your repository so Git config works
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      # Step B: Force the runner to use your GitHub email globally
+      - name: Configure Git Author
+        run: |
+          git config --global user.email "samarthyamgar321@gmail.com"
+          git config --global user.name "samarthyamgar"
+
+      # Step C: Run the sync action (it will now use the config above)
+      - name: Sync LeetCode
+        uses: joshcai/leetcode-sync@v1.7
+        with:
+          github-token: ${{ github.token }}
+          leetcode-csrf-token: ${{ secrets.LEETCODE_CSRF_TOKEN }}
+          leetcode-session: ${{ secrets.LEETCODE_SESSION }}
